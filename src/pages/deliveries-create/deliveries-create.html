@@ -1,0 +1,42 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>New Delivery</ion-title>
+    <ion-buttons end>
+      <button ion-button [attr.icon-only]="!isAndroid ? null : ''" (click)="cancel()">
+        <span color="primary" showWhen="ios">
+          Cancel
+        </span>
+        <ion-icon name="md-close" showWhen="core,android,windows"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label>Status</ion-label>
+      <ion-select [(ngModel)]="item.status" name="status">
+        <ion-option value="new" selected="true">New</ion-option>
+        <ion-option value="delivered">Delivered</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item class="custom-item">
+      <ion-label>Name</ion-label>
+      <ion-textarea [(ngModel)]="item.name" name="name"></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Address</ion-label>
+      <ion-input [(ngModel)]="item.address" id="googlePlaces" required></ion-input>
+  </ion-item>
+
+    <div padding>
+      <button block icon-start ion-button color="primary" (click)="done()"><ion-icon name="md-checkmark" showWhen="core,android,windows"></ion-icon>Create delivery</button>
+    </div>
+  </ion-list>
+</ion-content>

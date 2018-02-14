@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Trips
+    </ion-title>
+    <ion-buttons end>
+        <button ion-button (click)="addTrip()">
+          <ion-icon name="add-circle" padding-left></ion-icon>Add
+        </button>
+      </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-list-header>Upcoming trips</ion-list-header>
+    <ion-item>
+      <ion-icon name="navigate" item-start></ion-icon>
+      <ul>
+        <li>
+          Date
+        </li>
+        <li>
+          Stops
+        </li>
+        <li>
+          # Deliveries close by
+        </li>
+      </ul>
+    </ion-item>
+  </ion-list>
+  <ion-list>
+    <ion-list-header>Past trips</ion-list-header>
+  </ion-list>
+</ion-content>

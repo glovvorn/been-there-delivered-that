@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 
 import { Camera } from '@ionic-native/camera';
+import { Geolocation } from '@ionic-native/geolocation';
 
 import { MyApp } from './app.component';
 import { LoginPage } from '../pages/login/login';
@@ -13,8 +14,10 @@ import { SettingsPage } from '../pages/settings/settings';
 import { AboutPage } from '../pages/about/about';
 import { AccountPage } from '../pages/account/account';
 import { TabsPage } from '../pages/tabs/tabs';
-import { TasksPage } from '../pages/tasks/tasks';
-import { TasksCreatePage } from '../pages/tasks-create/tasks-create';
+import { DeliveriesPage } from '../pages/deliveries/deliveries';
+import { DeliveriesCreatePage } from '../pages/deliveries-create/deliveries-create';
+import { HomePage } from '../pages/home/home';
+import { MapPage } from '../pages/map/map';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -37,8 +40,10 @@ Amplify.configure(aws_exports);
     AboutPage,
     AccountPage,
     TabsPage,
-    TasksPage,
-    TasksCreatePage
+    DeliveriesPage,
+    DeliveriesCreatePage,
+    HomePage,
+    MapPage
   ],
   imports: [
     BrowserModule,
@@ -55,15 +60,18 @@ Amplify.configure(aws_exports);
     AboutPage,
     AccountPage,
     TabsPage,
-    TasksPage,
-    TasksCreatePage
+    DeliveriesPage,
+    DeliveriesCreatePage,
+    HomePage,
+    MapPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     Camera,
-    DynamoDB
+    DynamoDB,
+    Geolocation
   ]
 })
 export class AppModule {}

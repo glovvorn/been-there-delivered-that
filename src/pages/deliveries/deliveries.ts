@@ -3,22 +3,22 @@ import { Component } from '@angular/core';
 import { NavController, ModalController } from 'ionic-angular';
 import { Auth, Logger } from 'aws-amplify';
 
-import { TasksCreatePage } from '../tasks-create/tasks-create';
+import { DeliveriesCreatePage } from '../deliveries-create/deliveries-create';
 const aws_exports = require('../../aws-exports').default;
 
 import { DynamoDB } from '../../providers/providers';
 
-const logger = new Logger('Tasks');
+const logger = new Logger('Deliveries');
 
 @Component({
-  selector: 'page-tasks',
-  templateUrl: 'tasks.html'
+  selector: 'page-deliveries',
+  templateUrl: 'deliveries.html'
 })
-export class TasksPage {
+export class DeliveriesPage {
 
   public items: any;
   public refresher: any;
-  private taskTable: string = aws_exports.aws_resource_name_prefix + '-tasks';
+  private taskTable: string = aws_exports.aws_resource_name_prefix + '-Deliveries';
   private userId: string;
 
   constructor(public navCtrl: NavController,
@@ -28,17 +28,17 @@ export class TasksPage {
     Auth.currentCredentials()
       .then(credentials => {
         this.userId = credentials.identityId;
-        this.refreshTasks();
+        this.refreshDeliveries();
       })
       .catch(err => logger.debug('get current credentials err', err));
   }
 
   refreshData(refresher) {
     this.refresher = refresher;
-    this.refreshTasks()
+    this.refreshDeliveries()
   }
 
-  refreshTasks() {
+  refreshDeliveries() {
     const params = {
       'TableName': this.taskTable,
       'IndexName': 'DateSorted',
@@ -50,7 +50,7 @@ export class TasksPage {
     this.db.getDocumentClient()
       .then(client => client.query(params).promise())
       .then(data => { this.items = data.Items; })
-      .catch(err => logger.debug('error in refresh tasks', err))
+      .catch(err => logger.debug('error in refresh deliveries', err))
       .then(() => { this.refresher && this.refresher.complete() });
   }
 
@@ -66,9 +66,9 @@ export class TasksPage {
     return result.toLowerCase();
   }
 
-  addTask() {
+  addDelivery() {
     let id = this.generateId();
-    let addModal = this.modalCtrl.create(TasksCreatePage, { 'id': id });
+    let addModal = this.modalCtrl.create(DeliveriesCreatePage, { 'id': id });
     addModal.onDidDismiss(item => {
       if (!item) { return; }
       item.userId = this.userId;
@@ -80,24 +80,24 @@ export class TasksPage {
       };
       this.db.getDocumentClient()
         .then(client => client.put(params).promise())
-        .then(data => this.refreshTasks())
-        .catch(err => logger.debug('add task error', err));
+        .then(data => this.refreshDeliveries())
+        .catch(err => logger.debug('add delivery error', err));
     })
     addModal.present();
   }
 
-  deleteTask(task, index) {
+  deleteDelivery(delivery, index) {
     const params = {
       'TableName': this.taskTable,
       'Key': {
         'userId': this.userId,
-        'taskId': task.taskId
+        'deliveryId': delivery.deliveryId
       }
     };
     this.db.getDocumentClient()
       .then(client => client.delete(params).promise())
       .then(data => this.items.splice(index, 1))
-      .catch((err) => logger.debug('delete task error', err));
+      .catch((err) => logger.debug('delete delivery error', err));
   }
 
 }
