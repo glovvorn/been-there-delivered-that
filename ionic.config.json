@@ -1,0 +1,8 @@
+{
+  "name": "btdt",
+  "app_id": "8065b43a",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}
