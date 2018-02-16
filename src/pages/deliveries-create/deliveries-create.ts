@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ViewController, Platform } from 'ionic-angular';
+import { Delivery, DeliveryStatus } from '../../models';
 
 declare var google: any;
 
@@ -9,23 +10,26 @@ declare var google: any;
 })
 export class DeliveriesCreatePage {
 
-  
-
   isReadyToSave: boolean;
 
-  item: any;
+  item: Delivery;
 
   isAndroid: boolean;
+
+  formattedAddress: string;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               public viewCtrl: ViewController,
               public platform: Platform) {
     this.isAndroid = platform.is('android');
-    this.item = {
-      'deliveryId': navParams.get('id'),
-      'status': 'New'
-    };
+
+    console.log(this.item);
+    
+    this.item = new Delivery();
+    this.item.deliveryId = navParams.get('id')
+    this.item.status = DeliveryStatus.New;
+
     this.isReadyToSave = true;
   }
 
@@ -38,9 +42,10 @@ export class DeliveriesCreatePage {
     let input = document.getElementById('googlePlaces').getElementsByTagName('input')[0];
     let autocomplete = new google.maps.places.Autocomplete(input, {types: ['geocode']});
     google.maps.event.addListener(autocomplete, 'place_changed', () => {
-      // retrieve the place object for your use
       let place = autocomplete.getPlace();
       console.log(place);
+      this.item.address = place;
+      this.formattedAddress = place.formatted_address;
     });
  }
 
@@ -49,6 +54,7 @@ export class DeliveriesCreatePage {
   }
 
   done() { 
+    console.log(this.item);
     this.viewCtrl.dismiss(this.item);
   }
 

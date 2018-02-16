@@ -22,10 +22,25 @@
   </ion-refresher>
 
     <ion-list>
-      <ion-item-sliding *ngFor="let item of items; let idx = index;">
+      <ion-item-sliding *ngFor="let item of newItems; let idx = index;">
         <button ion-item>
           <h2>{{item.name}}</h2>
-          <p>{{item.address}}</p>
+          <p>{{item.address?.formatted_address}}</p>
+          <p>{{item.notes}}</p>
+        </button>
+
+        <ion-item-options>
+          <button ion-button color="danger" (click)="deleteDelivery(item, idx)">DELETE</button>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+
+    <ion-list>
+      <ion-item-sliding *ngFor="let item of deliveredItems; let idx = index;">
+        <button ion-item>
+          <h2>{{item.name}}</h2>
+          <p>{{item.address?.formatted_address}}</p>
+          <p>{{item.notes}}</p>
         </button>
 
         <ion-item-options>

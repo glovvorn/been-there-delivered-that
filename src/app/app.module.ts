@@ -24,6 +24,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { DynamoDB } from '../providers/aws.dynamodb';
 
+import { DeliveryService } from '../services/delivery-service';
+import { IdService } from '../services/id-service';
+
 import Amplify from 'aws-amplify';
 const aws_exports = require('../aws-exports').default;
 
@@ -71,7 +74,9 @@ Amplify.configure(aws_exports);
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     Camera,
     DynamoDB,
-    Geolocation
+    Geolocation,
+    DeliveryService,
+    IdService
   ]
 })
 export class AppModule {}

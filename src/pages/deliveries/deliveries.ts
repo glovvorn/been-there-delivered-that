@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-
 import { NavController, ModalController } from 'ionic-angular';
 import { Auth, Logger } from 'aws-amplify';
 
 import { DeliveriesCreatePage } from '../deliveries-create/deliveries-create';
-const aws_exports = require('../../aws-exports').default;
+import { Delivery, DeliveryStatus } from '../../models/index';
 
-import { DynamoDB } from '../../providers/providers';
+import { DeliveryService } from '../../services/delivery-service';
+import { IdService } from '../../services/id-service';
 
 const logger = new Logger('Deliveries');
 
@@ -16,14 +16,17 @@ const logger = new Logger('Deliveries');
 })
 export class DeliveriesPage {
 
-  public items: any;
+  public items: Delivery[];
+  public newItems: Delivery[];
+  public deliveredItems: Delivery[];
   public refresher: any;
-  private taskTable: string = aws_exports.aws_resource_name_prefix + '-Deliveries';
+
   private userId: string;
 
   constructor(public navCtrl: NavController,
-              public modalCtrl: ModalController,
-              public db: DynamoDB) {
+    public modalCtrl: ModalController,
+    private deliveryService: DeliveryService,
+    private idService: IdService) {
 
     Auth.currentCredentials()
       .then(credentials => {
@@ -35,51 +38,37 @@ export class DeliveriesPage {
 
   refreshData(refresher) {
     this.refresher = refresher;
-    this.refreshDeliveries()
+    this.refreshDeliveries();
   }
 
   refreshDeliveries() {
-    const params = {
-      'TableName': this.taskTable,
-      'IndexName': 'DateSorted',
-      'KeyConditionExpression': "#userId = :userId",
-      'ExpressionAttributeNames': { '#userId': 'userId' },
-      'ExpressionAttributeValues': { ':userId': this.userId },
-      'ScanIndexForward': false
-    };
-    this.db.getDocumentClient()
-      .then(client => client.query(params).promise())
-      .then(data => { this.items = data.Items; })
-      .catch(err => logger.debug('error in refresh deliveries', err))
-      .then(() => { this.refresher && this.refresher.complete() });
+    this.deliveryService.refreshDeliveries(this.userId).subscribe((data) => {
+      if (data) {
+        this.items = data;
+        this.assignArrays();
+      }
+    }),
+      ((err) => {
+        logger.debug('error in refresh deliveries', err)
+      }
+      ),
+      (() => {
+        this.refresher && this.refresher.complete()
+      }
+      );
   }
 
-  generateId() {
-    var len = 16;
-    var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    var charLength = chars.length;
-    var result = "";
-    let randoms = window.crypto.getRandomValues(new Uint32Array(len));
-    for(var i = 0; i < len; i++) {
-      result += chars[randoms[i] % charLength];
-    }
-    return result.toLowerCase();
+  assignArrays() {
+    this.newItems = this.items.filter(x => x.status === DeliveryStatus.New);
+    this.deliveredItems = this.items.filter(x => x.status === DeliveryStatus.Delivered);
   }
 
   addDelivery() {
-    let id = this.generateId();
+    let id = this.idService.generateId();
     let addModal = this.modalCtrl.create(DeliveriesCreatePage, { 'id': id });
     addModal.onDidDismiss(item => {
       if (!item) { return; }
-      item.userId = this.userId;
-      item.created = (new Date().getTime() / 1000);
-      const params = {
-        'TableName': this.taskTable,
-        'Item': item,
-        'ConditionExpression': 'attribute_not_exists(id)'
-      };
-      this.db.getDocumentClient()
-        .then(client => client.put(params).promise())
+      this.deliveryService.addDelivery(item, this.userId).toPromise()
         .then(data => this.refreshDeliveries())
         .catch(err => logger.debug('add delivery error', err));
     })
@@ -87,17 +76,17 @@ export class DeliveriesPage {
   }
 
   deleteDelivery(delivery, index) {
-    const params = {
-      'TableName': this.taskTable,
-      'Key': {
-        'userId': this.userId,
-        'deliveryId': delivery.deliveryId
-      }
-    };
-    this.db.getDocumentClient()
-      .then(client => client.delete(params).promise())
-      .then(data => this.items.splice(index, 1))
-      .catch((err) => logger.debug('delete delivery error', err));
+    // const params = {
+    //   'TableName': this.taskTable,
+    //   'Key': {
+    //     'userId': this.userId,
+    //     'deliveryId': delivery.deliveryId
+    //   }
+    // };
+    // this.db.getDocumentClient()
+    //   .then(client => client.delete(params).promise())
+    //   .then(data => this.items.splice(index, 1))
+    //   .catch((err) => logger.debug('delete delivery error', err));
   }
 
 }

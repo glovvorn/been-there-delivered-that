@@ -20,8 +20,8 @@
     <ion-item>
       <ion-label>Status</ion-label>
       <ion-select [(ngModel)]="item.status" name="status">
-        <ion-option value="new" selected="true">New</ion-option>
-        <ion-option value="delivered">Delivered</ion-option>
+        <ion-option value="0" selected="true">New</ion-option>
+        <ion-option value="1">Delivered</ion-option>
       </ion-select>
     </ion-item>
 
@@ -32,7 +32,12 @@
 
     <ion-item>
       <ion-label>Address</ion-label>
-      <ion-input [(ngModel)]="item.address" id="googlePlaces" required></ion-input>
+      <ion-input [(ngModel)]="formattedAddress" id="googlePlaces" required></ion-input>
+  </ion-item>
+
+  <ion-item class="custom-item">
+    <ion-label>Notes</ion-label>
+    <ion-textarea [(ngModel)]="item.notes" name="notes"></ion-textarea>
   </ion-item>
 
     <div padding>
