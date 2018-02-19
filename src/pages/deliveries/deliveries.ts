@@ -42,7 +42,7 @@ export class DeliveriesPage {
   }
 
   refreshDeliveries() {
-    this.deliveryService.refreshDeliveries(this.userId).subscribe((data) => {
+    this.deliveryService.getDeliveries(this.userId).subscribe((data) => {
       if (data) {
         this.items = data;
         this.assignArrays();
@@ -75,18 +75,17 @@ export class DeliveriesPage {
     addModal.present();
   }
 
-  deleteDelivery(delivery, index) {
-    // const params = {
-    //   'TableName': this.taskTable,
-    //   'Key': {
-    //     'userId': this.userId,
-    //     'deliveryId': delivery.deliveryId
-    //   }
-    // };
-    // this.db.getDocumentClient()
-    //   .then(client => client.delete(params).promise())
-    //   .then(data => this.items.splice(index, 1))
-    //   .catch((err) => logger.debug('delete delivery error', err));
+  completeDelivery(delivery, index) {
+    delivery.status = DeliveryStatus.Delivered;
+
+    this.deliveryService.updateDelivery(delivery).subscribe(data => {
+      this.refreshDeliveries();
+    })
   }
 
+  deleteDelivery(delivery, index) {
+    this.deliveryService.deleteDelivery(delivery).subscribe(data => {
+      this.refreshDeliveries();
+    });
+  }
 }

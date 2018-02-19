@@ -6,10 +6,18 @@
 
 <ion-content padding>
   <h2>Been There, Delivered That</h2>
-  <p>
-    # outstanding deliveries
-  </p>
-  <p>
-    # deliveries within X miles of an upcoming trip
-  </p>
+
+  <h5>{{newDeliveryCount}} outstanding deliveries</h5>
+  <div>
+      <button [hidden]="editAddress" ion-item (click)="editAddressToggle()">
+        <p>{{address}}</p>
+        <p *ngIf="!formattedAddress || formattedAddress?.length === 0">Enter Address</p>
+      </button>
+
+      <ion-item [hidden]="!editAddress">
+        <ion-input [(ngModel)]="formattedAddress" id="googlePlacesHome" required></ion-input>
+        <button item-right (click)="saveAddress()">Save</button>
+        <button item-left (click)="cancelSaveAddress()">Cancel</button>
+      </ion-item>
+  </div>
 </ion-content>

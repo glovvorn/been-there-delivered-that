@@ -10,9 +10,4 @@ export class Delivery {
     public address: any;
     public notes: string;
     public active: boolean;
-
-    // public constructor(deliveryId: string) {
-    //     this.deliveryId = deliveryId;
-    // }
-    constructor() {}
 }

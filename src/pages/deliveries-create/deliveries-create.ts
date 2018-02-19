@@ -19,13 +19,13 @@ export class DeliveriesCreatePage {
   formattedAddress: string;
 
   constructor(public navCtrl: NavController,
-              public navParams: NavParams,
-              public viewCtrl: ViewController,
-              public platform: Platform) {
+    public navParams: NavParams,
+    public viewCtrl: ViewController,
+    public platform: Platform) {
     this.isAndroid = platform.is('android');
 
     console.log(this.item);
-    
+
     this.item = new Delivery();
     this.item.deliveryId = navParams.get('id')
     this.item.status = DeliveryStatus.New;
@@ -40,21 +40,20 @@ export class DeliveriesCreatePage {
   ionViewWillEnter() {
     // Google Places API auto complete
     let input = document.getElementById('googlePlaces').getElementsByTagName('input')[0];
-    let autocomplete = new google.maps.places.Autocomplete(input, {types: ['geocode']});
+    let autocomplete = new google.maps.places.Autocomplete(input, { types: ['geocode'] });
     google.maps.event.addListener(autocomplete, 'place_changed', () => {
       let place = autocomplete.getPlace();
       console.log(place);
       this.item.address = place;
       this.formattedAddress = place.formatted_address;
     });
- }
+  }
 
   cancel() {
     this.viewCtrl.dismiss();
   }
 
-  done() { 
-    console.log(this.item);
+  done() {
     this.viewCtrl.dismiss(this.item);
   }
 

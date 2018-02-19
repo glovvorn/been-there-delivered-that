@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Delivery } from '../models/index';
+import { Delivery, DeliveryStatus } from '../models/index';
 import { DynamoDB } from '../providers/aws.dynamodb';
 import { Observable } from 'rxjs/Observable';
 import { AsyncSubject } from 'rxjs/AsyncSubject';
@@ -9,7 +9,7 @@ const logger = new Logger('DeliveryService');
 
 @Injectable()
 export class DeliveryService {
-    public deliveries: Delivery[];
+    public deliveries: Array<Delivery>;
 
     private deliveryTable: string = aws_exports.aws_resource_name_prefix + '-Deliveries';
 
@@ -17,7 +17,7 @@ export class DeliveryService {
         this.deliveries = [];
     }
 
-    refreshDeliveries(userId: string): Observable<Delivery[]> {
+    getDeliveries(userId: string): Observable<Delivery[]> {
         let callback = new AsyncSubject<Delivery[]>();
 
         const params = {
@@ -37,10 +37,10 @@ export class DeliveryService {
                 callback.complete();
             })
             .catch(err => {
-                logger.debug('error in refresh deliveries', err)
+                logger.debug('error in get deliveries', err);
             })
             .then(() => {
-                logger.debug('done with refresh deliveries');
+                logger.debug('done with get deliveries');
             });
 
         return callback.asObservable();
@@ -55,7 +55,7 @@ export class DeliveryService {
         const params = {
             'TableName': this.deliveryTable,
             'Item': delivery,
-            'ConditionExpression': 'attribute_not_exists(id)'
+            'ConditionExpression': 'attribute_not_exists(deliveryId)'
         };
         this.db.getDocumentClient()
             .then(client => client.put(params).promise())
@@ -63,8 +63,41 @@ export class DeliveryService {
                 callback.next(data);
                 callback.complete();
             })
-            .catch(err => logger.debug('add delivery error', err));
+            .catch(err => {
+                logger.debug('add delivery error', err);
+                callback.error(err);
+                callback.complete();
+            });
 
         return callback.asObservable();
+    }
+
+    updateDelivery(delivery: Delivery): Observable<Delivery> {
+        let callback = new AsyncSubject<Delivery>();
+
+        const params = {
+            'TableName': this.deliveryTable,
+            'Item': delivery,
+            'ConditionExpression': 'attribute_exists(deliveryId)'
+        };
+        this.db.getDocumentClient()
+            .then(client => client.put(params).promise())
+            .then(data => {
+                callback.next(data);
+                callback.complete();
+            })
+            .catch((err) => {
+                logger.debug('update delivery error', err);
+                callback.error(err);
+                callback.complete();
+            });
+
+        return callback.asObservable();
+    }
+
+    deleteDelivery(delivery: Delivery): Observable<Delivery> {
+        delivery.status = DeliveryStatus.Deleted;
+        delivery.active = false;
+        return this.updateDelivery(delivery);   
     }
 }
