@@ -8,6 +8,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { MyApp } from './app.component';
 import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
+import { ConfirmPage } from '../pages/confirm/confirm';
 import { ConfirmSignInPage } from '../pages/confirmSignIn/confirmSignIn';
 import { ConfirmSignUpPage } from '../pages/confirmSignUp/confirmSignUp';
 import { SettingsPage } from '../pages/settings/settings';
@@ -18,6 +19,7 @@ import { DeliveriesPage } from '../pages/deliveries/deliveries';
 import { DeliveriesCreatePage } from '../pages/deliveries-create/deliveries-create';
 import { HomePage } from '../pages/home/home';
 import { MapPage } from '../pages/map/map';
+import { TripsPage } from '../pages/trips/trips';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -37,6 +39,7 @@ Amplify.configure(aws_exports);
     MyApp,
     LoginPage,
     SignupPage,
+    ConfirmPage,
     ConfirmSignInPage,
     ConfirmSignUpPage,
     SettingsPage,
@@ -46,7 +49,8 @@ Amplify.configure(aws_exports);
     DeliveriesPage,
     DeliveriesCreatePage,
     HomePage,
-    MapPage
+    MapPage,
+    TripsPage
   ],
   imports: [
     BrowserModule,
@@ -57,6 +61,7 @@ Amplify.configure(aws_exports);
     MyApp,
     LoginPage,
     SignupPage,
+    ConfirmPage,
     ConfirmSignInPage,
     ConfirmSignUpPage,
     SettingsPage,
@@ -66,7 +71,8 @@ Amplify.configure(aws_exports);
     DeliveriesPage,
     DeliveriesCreatePage,
     HomePage,
-    MapPage
+    MapPage,
+    TripsPage
   ],
   providers: [
     StatusBar,
