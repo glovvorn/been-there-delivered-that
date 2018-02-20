@@ -20,6 +20,7 @@ export class MapPage {
   map: any;
 
   userId: string;
+  markers: any[] = [];
 
   constructor(public navCtrl: NavController,
     public geolocation: Geolocation,
@@ -37,6 +38,11 @@ export class MapPage {
   }
 
   ionViewDidEnter() {
+    for (var i = 0; i < this.markers.length; i++) {
+      this.markers[i].setMap(null);
+    }
+    this.markers.length = 0;
+
     this.getDeliveries();
   }
 
@@ -94,6 +100,8 @@ export class MapPage {
     });
 
     this.addInfoWindow(marker, content);
+
+    this.markers.push(marker);
   }
 
   addInfoWindow(marker, content) {
@@ -124,7 +132,7 @@ export class MapPage {
   generateContentForDelivery(delivery: Delivery): string {
     let html = '<h3>' + delivery.name + '</h3>';
     if (delivery.address && delivery.address.formatted_address) {
-      html += '<h4>' + delivery.address.formatted_address + '</h4>';
+      html += '<p><b>' + delivery.address.formatted_address + '</b></p>';
     }
     if (delivery.notes) {
       html += '<p>' + delivery.notes + '</p>';

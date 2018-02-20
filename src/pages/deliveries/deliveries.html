@@ -12,7 +12,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-refresher (ionRefresh)="refreshData($event)">
+  <ion-refresher (ionRefresh)="refreshData($event)" *ngIf="editOutstandingList === false && editCompletedList === false">
     <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
     </ion-refresher-content>
   </ion-refresher>
@@ -20,40 +20,54 @@
   <ion-list>
     <ion-list-header>
       Outstanding Deliveries
+      <ion-buttons end>
+        <button ion-button small clear (click)="editList('outstanding');">
+          {{outstandingEditButtonName}}
+        </button>
+      </ion-buttons>
     </ion-list-header>
-    <ion-item-sliding *ngFor="let item of newItems; let idx = index;">
-      <button ion-item>
-        <ion-avatar item-start>
-          <img src="../../assets/imgs/bag.jpg">
-        </ion-avatar>
-        <h2>{{item.name}}</h2>
-        <p>{{item.address?.formatted_address}}</p>
-        <p>{{item.notes}}</p>
-      </button>
+    <ion-item-group reorder="{{editOutstandingList}}" (ionItemReorder)="reorderOutstandingItems($event)">
+      <ion-item-sliding *ngFor="let item of newItems; let idx = index;">
+        <button ion-item>
+          <ion-avatar item-start>
+              <img src="../../assets/imgs/contact.png">
+          </ion-avatar>
+          <h2>{{item.name}}</h2>
+          <p>{{item.address?.formatted_address}}</p>
+          <p>{{item.notes}}</p>
+        </button>
 
-      <ion-item-options>
-        <button ion-button color="light" (click)="completeDelivery(item, idx)">DELIVERED</button>
-      </ion-item-options>
-    </ion-item-sliding>
+        <ion-item-options>
+          <button ion-button color="light" (click)="completeDelivery(item, idx)">DELIVERED</button>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-item-group>
   </ion-list>
 
   <ion-list>
     <ion-list-header>
       Completed Deliveries
+      <ion-buttons end>
+        <button ion-button small clear (click)="editList('completed');">
+          {{completedEditButtonName}}
+        </button>
+      </ion-buttons>
     </ion-list-header>
-    <ion-item-sliding *ngFor="let item of deliveredItems; let idx = index;">
-      <button ion-item>
-        <ion-avatar item-start>
-          <img src="../../assets/imgs/bag.jpg">
-        </ion-avatar>
-        <h2>{{item.name}}</h2>
-        <p>{{item.address?.formatted_address}}</p>
-        <p>{{item.notes}}</p>
-      </button>
+    <ion-item-group reorder="{{editCompletedList}}" (ionItemReorder)="reorderCompletedItems($event)">
+      <ion-item-sliding *ngFor="let item of deliveredItems; let idx = index;">
+        <button ion-item>
+          <ion-avatar item-start>
+            <img src="../../assets/imgs/contact.png">
+          </ion-avatar>
+          <h2>{{item.name}}</h2>
+          <p>{{item.address?.formatted_address}}</p>
+          <p>{{item.notes}}</p>
+        </button>
 
-      <ion-item-options>
-        <button ion-button color="danger" (click)="deleteDelivery(item, idx)">DELETE</button>
-      </ion-item-options>
-    </ion-item-sliding>
+        <ion-item-options>
+          <button ion-button color="danger" (click)="deleteDelivery(item, idx)">DELETE</button>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-item-group>
   </ion-list>
 </ion-content>

@@ -23,6 +23,11 @@ export class DeliveriesPage {
 
   private userId: string;
 
+  outstandingEditButtonName: string = 'edit';
+  editOutstandingList: boolean = false;
+  completedEditButtonName: string = 'edit';
+  editCompletedList: boolean = false;
+
   constructor(public navCtrl: NavController,
     public modalCtrl: ModalController,
     private deliveryService: DeliveryService,
@@ -47,13 +52,15 @@ export class DeliveriesPage {
         this.items = data;
         this.assignArrays();
       }
+
+      this.refresher && this.refresher.complete();
     }),
       ((err) => {
-        logger.debug('error in refresh deliveries', err)
+        logger.debug('error in refresh deliveries', err);
       }
       ),
       (() => {
-        this.refresher && this.refresher.complete()
+        this.refresher && this.refresher.complete();
       }
       );
   }
@@ -87,5 +94,27 @@ export class DeliveriesPage {
     this.deliveryService.deleteDelivery(delivery).subscribe(data => {
       this.refreshDeliveries();
     });
+  }
+
+  reorderOutstandingItems(indexes) {
+    let element = this.newItems[indexes.from];
+    this.newItems.splice(indexes.from, 1);
+    this.newItems.splice(indexes.to, 0, element);
+  }
+  
+  reorderCompletedItems(indexes) {
+    let element = this.deliveredItems[indexes.from];
+    this.deliveredItems.splice(indexes.from, 1);
+    this.deliveredItems.splice(indexes.to, 0, element);
+  }
+
+  editList(list: string) {
+    if (list === 'outstanding') {
+      this.editOutstandingList = !this.editOutstandingList;
+      this.outstandingEditButtonName = (this.outstandingEditButtonName === 'edit') ? 'done' : 'edit';
+    } else {
+      this.editCompletedList = !this.editCompletedList;
+      this.completedEditButtonName = (this.completedEditButtonName === 'edit') ? 'done' : 'edit';
+    }
   }
 }

@@ -8,7 +8,34 @@
   <h2>Been There, Delivered That</h2>
 
   <h5>{{newDeliveryCount}} outstanding deliveries</h5>
-  <div>
+  
+  <h3><i>Coming soon</i></h3>
+  <ul>
+    <li>
+      Store personal preferences, such as your home address
+    </li>
+    <li>
+      Create trips and get notified about deliveries on your route
+    </li>
+    <li>
+      Sign up for notifications for urgent / upcoming deliveries
+    </li>
+    <li>
+      Edit/mark deliveries as completed from the Maps page
+    </li>
+    <li>
+      Edit deliveries
+    </li>
+    <li>
+      Track delivery dates
+    </li>
+    <li>
+      Track mileage
+    </li>
+  </ul>
+
+  <!-- TODO(greg): Un-hide this to enter address -->
+  <div hidden="true">
       <button [hidden]="editAddress" ion-item (click)="editAddressToggle()">
         <p>{{address}}</p>
         <p *ngIf="!formattedAddress || formattedAddress?.length === 0">Enter Address</p>
