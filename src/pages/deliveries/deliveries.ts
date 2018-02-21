@@ -16,9 +16,9 @@ const logger = new Logger('Deliveries');
 })
 export class DeliveriesPage {
 
-  public items: Delivery[];
-  public newItems: Delivery[];
-  public deliveredItems: Delivery[];
+  public items: Delivery[] = [];
+  public newItems: Delivery[] = [];
+  public deliveredItems: Delivery[] = [];
   public refresher: any;
 
   private userId: string;

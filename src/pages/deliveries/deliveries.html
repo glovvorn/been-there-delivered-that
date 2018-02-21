@@ -17,9 +17,13 @@
     </ion-refresher-content>
   </ion-refresher>
 
-  <ion-list>
+  <ion-label *ngIf="newItems?.length === 0 && deliveredItems?.length === 0" class="enterDelivery">
+    Enter a delivery to get started!
+  </ion-label>
+
+  <ion-list *ngIf="newItems?.length > 0">
     <ion-list-header>
-      Outstanding Deliveries
+      Deliveries to make
       <ion-buttons end>
         <button ion-button small clear (click)="editList('outstanding');">
           {{outstandingEditButtonName}}
@@ -44,7 +48,7 @@
     </ion-item-group>
   </ion-list>
 
-  <ion-list>
+  <ion-list *ngIf="deliveredItems?.length > 0">
     <ion-list-header>
       Completed Deliveries
       <ion-buttons end>

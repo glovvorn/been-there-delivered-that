@@ -35,9 +35,10 @@ features:
               address: S
               created: N
               deliveryId: S
-              latlng: S
               name: S
               userId: S
+              notes: S
+              active: BOOLEAN
             hashKeyName: userId
             hashKeyType: S
             rangeKeyName: deliveryId

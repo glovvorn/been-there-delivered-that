@@ -29,6 +29,8 @@ export class DeliveryService {
             'ScanIndexForward': false
         };
 
+        console.log(params);
+
         this.db.getDocumentClient()
             .then(client => client.query(params).promise())
             .then(data => {
