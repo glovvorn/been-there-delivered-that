@@ -20,17 +20,7 @@ export class HomePage {
   address: string;
   formattedAddress: string;
 
-  constructor(public navCtrl: NavController,
-    private deliveryService: DeliveryService) {
-
-    //TODO(greg): user service that saves user info including home address
-    Auth.currentCredentials()
-      .then(credentials => {
-        this.userId = credentials.identityId;
-        this.getDeliveryCount();
-      })
-      .catch(err => logger.debug('get current credentials err', err));
-  }
+  constructor(public navCtrl: NavController, private deliveryService: DeliveryService) { }
 
   getDeliveryCount() {
     this.deliveryService.getDeliveries(this.userId).subscribe((data) => {
@@ -47,6 +37,19 @@ export class HomePage {
       this.googleLocation = place;
       this.formattedAddress = place.formatted_address;
     });
+  }
+
+  ionViewDidEnter() {
+    //TODO(greg): user service
+    Auth.currentCredentials()
+      .then(credentials => {
+        this.userId = credentials.identityId;
+        this.getDeliveryCount();
+      })
+      .catch(err => logger.debug('get current credentials err', err));
+
+      //TODO(greg): after user service is implemented uncomment this
+      //this.getDeliveryCount();
   }
 
   editAddressToggle() {
